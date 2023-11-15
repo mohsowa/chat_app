@@ -18,7 +18,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       method: 'GET',
     );
 
-
     if(res.statusCode == 200){
       return Future.value(true);
     } else if (res.statusCode == 401){

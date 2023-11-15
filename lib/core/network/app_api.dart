@@ -4,19 +4,34 @@ import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-final String _baseUrl = dotenv.env['API_URL'] ?? '';
+final String _baseUrl = dotenv.env['API_URL'] ?? 'https://chat.mohsowa.com/api';
 final client = sl.get<http.Client>();
 final authCubit = sl.get<AuthCubit>();
 
-Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.MultipartFile? file, required String endPoint, required String method, bool isAuth = true}) async {
+Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.MultipartFile? file, required String endPoint,bool? auth, required String method, bool isAuth = true}) async {
+
   try{
-    final token = authCubit.user.access_token;
-    var headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
+
+    late var headers;
+
+    if(auth == true){
+      final token = authCubit.user.access_token;
+      headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+    }else{
+      headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      };
+    }
+
+
+
     var request = http.MultipartRequest(method, Uri.parse(_baseUrl + endPoint));
+
 
     if (data != null) {
       request.fields.addAll(data);
@@ -30,6 +45,7 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
 
     http.StreamedResponse response = await client.send(request);
 
+
     if(response.statusCode == 401){
       if(isAuth){
         //authCubit.add(LogOutEvent(navigatorKey.currentState!.context));
@@ -38,8 +54,16 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
       }
     }
 
+    if(response.statusCode == 400){
+      throw Exception('Bad Request');
+    }
+
+    if(response.statusCode == 403){
+      throw Exception('Forbidden');
+    }
+
     if(response.statusCode == 404){
-      throw Exception('Not Found');
+      throw Exception('Target Not Found');
     }
 
     if(response.statusCode == 500){

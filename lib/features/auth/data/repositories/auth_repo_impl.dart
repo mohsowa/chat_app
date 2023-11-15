@@ -42,5 +42,33 @@ class AuthRepoImpl implements AuthRepo {
     }
   }
 
+  //signInWithEmailAndPassword
+  @override
+  Future<Either<Failure, User>> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      final user = await remoteDataSource.signInWithEmailAndPassword(email, password);
+      await localDataSource.cacheUser(user);
+      return Right(user);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+
+  @override
+  Future<Either<Failure, User>> signInWithUsernameAndPassword(String email, String password) async {
+    try {
+      final user = await remoteDataSource.signInWithEmailAndPassword(email, password);
+      await localDataSource.cacheUser(user);
+      return Right(user);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
 
 }

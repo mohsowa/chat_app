@@ -1,5 +1,8 @@
+import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/features/auth/auth_di.dart' as di;
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 
@@ -18,38 +21,79 @@ class _LoginPageState extends State<LoginPage> {
   final _emailPasswordController = TextEditingController();
   final _usernameController = TextEditingController();
   final _usernamePasswordController = TextEditingController();
-  final _phoneController = TextEditingController();
 
   // map to valid fields in the form
-  Map<String, bool> _validFieldsEmail = {
+  final Map<String, bool> _validFieldsEmail = {
     'email': false,
     'password': false,
   };
 
-  Map<String, bool> _validFieldsUsername = {
+  final Map<String, bool> _validFieldsUsername = {
     'username': false,
     'password': false,
   };
+
+  final cubit = AuthCubit(di.sl.get());
   
 
-
-
   _loginViaEmail() {
-   
+    cubit.signInWithEmailAndPassword(
+      _emailController.text,
+      _emailPasswordController.text,
+    );
   }
 
   _loginViaUsername() {
-    
+    cubit.signInWithUsernameAndPassword(
+      _usernameController.text,
+      _usernamePasswordController.text,
+    );
   }
-  
 
 
   @override
   Widget build(BuildContext context) {
-    return LoginWidget(context);
+    return BlocBuilder(
+      bloc: cubit,
+      builder: (context, state) {
+        // states handler
+        if (state is AuthLoading) {
+          // Show the loading widget on top of your main widget.
+          return Stack(
+            children: [
+              _loginWidget(context), // Your main content widget
+              Positioned.fill(
+                child: Center(
+                  child: _loginWidget(context),
+                ),
+              ),
+            ],
+          );
+        }
+
+        if (state is AuthError) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+          });
+          cubit.clearAuthState();
+        }
+        if (state is AuthLoaded) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/MainPages', (Route<dynamic> route) => false);
+          });
+        }
+
+        return _loginWidget(context);
+      },
+    );
   }
 
-  Scaffold LoginWidget(BuildContext context) {
+  Scaffold _loginWidget(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -64,8 +108,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: <Widget>[
                         Image.asset(
-                          'images/Logo/2x/Icon_1@2x.png',
-                          height: 60,
+                          'assets/images/login_image.png',
+                          height: 120,
                         ),
                         const SizedBox(height: 12),
                         const Text(
@@ -320,7 +364,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           onPressed: () {
-                            print(_validFieldsEmail);
                             if (_validFieldsEmail['email']! &&
                                 _validFieldsEmail['password']!) {
                               _loginViaEmail();

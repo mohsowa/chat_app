@@ -24,4 +24,37 @@ class AuthCubit extends Cubit<AuthState> {
       }
     );
   }
+
+  // signInWithEmailAndPassword
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    emit(AuthLoading());
+    final failureOrUser = await repository.signInWithEmailAndPassword(email, password);
+    failureOrUser.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (user) {
+        this.user = user;
+        emit(AuthLoaded(user: user));
+      }
+    );
+  }
+
+  Future<void> signInWithUsernameAndPassword(String email, String password) async {
+    emit(AuthLoading());
+    final failureOrUser = await repository.signInWithEmailAndPassword(
+        email, password);
+    failureOrUser.fold(
+            (failure) => emit(AuthError(message: failure.message)),
+            (user) {
+          this.user = user;
+          emit(AuthLoaded(user: user));
+        }
+    );
+  }
+
+  // clear auth state
+  Future<void> clearAuthState() async {
+    emit(AuthInitial());
+  }
+
+
 }

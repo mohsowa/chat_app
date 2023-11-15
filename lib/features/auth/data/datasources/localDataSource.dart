@@ -1,12 +1,13 @@
 import 'dart:convert';
-
 import 'package:chat_app/core/errors/excptions.dart';
 import 'package:chat_app/features/auth/data/models/user_model.dart';
+import 'package:dartz/dartz.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
- // getCachedUser
+  Future<void> clearCache();
   Future<UserModel> getCachedUser();
+  Future<Unit> cacheUser(UserModel user);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -16,6 +17,11 @@ class LocalDataSourceImpl implements LocalDataSource {
   LocalDataSourceImpl({
     required this.sharedPreferences,
   });
+
+  @override
+  Future<void> clearCache() async {
+    await sharedPreferences.clear();
+  }
 
   // getCachedUser
   @override
@@ -27,6 +33,14 @@ class LocalDataSourceImpl implements LocalDataSource {
     } else {
       throw EmptyCacheException(message: 'No user cached');
     }
+  }
+
+  // cacheUser
+  @override
+  Future<Unit> cacheUser(UserModel userToCache) {
+    final jsonUser = userToCache.toJson();
+    sharedPreferences.setString('user', json.encode(jsonUser));
+    return Future.value(unit);
   }
 
 

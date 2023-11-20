@@ -555,6 +555,34 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Skip and go to The Home ',
+                          style: TextStyle(
+                            color: Color.fromRGBO(10, 44, 64, 1),
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, '/home');
+                          },
+                          child: const Text(
+                            'Skip',
+                            style: TextStyle(
+                              color: Color.fromRGBO(64, 194, 210, 1),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

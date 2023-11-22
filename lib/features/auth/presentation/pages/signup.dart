@@ -1,5 +1,8 @@
-
+import 'package:chat_app/features/auth/auth_di.dart' as di;
+import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -9,9 +12,33 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _usernameController = TextEditingController();
+  final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  final authCubit = di.sl.get<AuthCubit>();
+
+  void _signUp() {
+    final username = _usernameController.text;
+    final fullName = _fullNameController.text;
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if(password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match'),
+        ),
+      );
+      return;
+    }
+
+    authCubit.signup(fullName, email, username, password);
+  }
+
 
   // Add any additional controllers or validation logic as needed
   final InputDecoration textFieldDecoration = InputDecoration(
@@ -30,8 +57,53 @@ class _SignUpPageState extends State<SignUpPage> {
     contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
   );
 
+
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder(
+      bloc: authCubit,
+      builder: (context, state) {
+        // states handler
+        if (state is AuthLoading) {
+          // Show the loading widget on top of your main widget.
+          return Stack(
+            children: [
+              _registerWidget(context), // Your main content widget
+              Positioned.fill(
+                child: Center(
+                  child: _registerWidget(context),
+                ),
+              ),
+            ],
+          );
+        }
+
+        if (state is AuthError) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
+          });
+        }
+
+
+        if (state is AuthLoaded) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/home', (Route<dynamic> route) => false);
+          });
+        }
+
+        return _registerWidget(context);
+      },
+    );
+  }
+
+
+
+  Scaffold _registerWidget(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -40,13 +112,13 @@ class _SignUpPageState extends State<SignUpPage> {
             child: SingleChildScrollView(
               child: Column(
                   children: [
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Image.asset(
                       'assets/images/signup_image.png',
                       height: 120,
                     ),
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'Sign Up',
                       style: TextStyle(
                         fontSize: 18,
@@ -54,8 +126,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
+                    const SizedBox(height: 10),
+                    const Text(
                       'Create an account to continue!',
                       style: TextStyle(
                         fontSize: 14,
@@ -72,6 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                   //user name
                   TextFormField(
+                    controller: _fullNameController,
                     keyboardType: TextInputType.name,
                     decoration: textFieldDecoration.copyWith(
                       prefixIcon: const Icon(Icons.person_rounded,
@@ -89,6 +162,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 10),
                   //user name
                   TextFormField(
+                    controller: _usernameController,
                     keyboardType: TextInputType.name,
                     decoration: textFieldDecoration.copyWith(
                       prefixIcon: const Icon(Icons.alternate_email,
@@ -173,6 +247,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     onPressed: () {
+                      _signUp();
                     },
                     child: const Text('Sign up',
                         style: TextStyle(

@@ -8,6 +8,7 @@ abstract class LocalDataSource {
   Future<void> clearCache();
   Future<UserModel> getCachedUser();
   Future<Unit> cacheUser(UserModel user);
+  Future<Unit> cacheToken(String token);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -40,6 +41,13 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<Unit> cacheUser(UserModel userToCache) {
     final jsonUser = userToCache.toJson();
     sharedPreferences.setString('user', json.encode(jsonUser));
+    return Future.value(unit);
+  }
+
+  // cacheToken
+  @override
+  Future<Unit> cacheToken(String token) {
+    sharedPreferences.setString('token', token);
     return Future.value(unit);
   }
 

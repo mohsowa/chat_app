@@ -24,10 +24,12 @@ class AuthRepoImpl implements AuthRepo {
     try {
       final user = await localDataSource.getCachedUser();
 
+
       // check if user token is valid
       final isValid = await remoteDataSource.checkToken(user.access_token!);
 
-      if(isValid){
+
+      if (isValid) {
         return Right(user);
       } else {
         return Left(ServerFailure(message: 'Token is not valid'));
@@ -44,9 +46,11 @@ class AuthRepoImpl implements AuthRepo {
 
   //signInWithEmailAndPassword
   @override
-  Future<Either<Failure, User>> signInWithEmailAndPassword(String email, String password) async {
+  Future<Either<Failure, User>> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
-      final user = await remoteDataSource.signInWithEmailAndPassword(email, password);
+      final user =
+          await remoteDataSource.signInWithEmailAndPassword(email, password);
       await localDataSource.cacheUser(user);
       return Right(user);
     } on ServerException catch (e) {
@@ -55,12 +59,13 @@ class AuthRepoImpl implements AuthRepo {
       return Left(ServerFailure(message: e.toString()));
     }
   }
-
 
   @override
-  Future<Either<Failure, User>> signInWithUsernameAndPassword(String email, String password) async {
+  Future<Either<Failure, User>> signInWithUsernameAndPassword(
+      String username, String password) async {
     try {
-      final user = await remoteDataSource.signInWithEmailAndPassword(email, password);
+      final user = await remoteDataSource.signInWithUsernameAndPassword(
+          username, password);
       await localDataSource.cacheUser(user);
       return Right(user);
     } on ServerException catch (e) {
@@ -70,5 +75,41 @@ class AuthRepoImpl implements AuthRepo {
     }
   }
 
+  @override
+  Future<Either<Failure, User>> signup(
+      String name, String email, String username, String password) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final user = await remoteDataSource.signup(
+            name: name, email: email, username: username, password: password);
 
+        await localDataSource.cacheUser(user);
+
+        // cache access token
+        String? accessToken = user.access_token;
+        await localDataSource.cacheToken(accessToken!);
+
+        return Right(user);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } catch (e) {
+        return Left(ServerFailure(message: e.toString()));
+      }
+    } else {
+      return Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> logout(String token) async {
+    try {
+      await remoteDataSource.logout(token);
+      localDataSource.clearCache();
+      return const Right(unit);
+    } on EmptyCacheException catch (e) {
+      return Left(EmptyCacheFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

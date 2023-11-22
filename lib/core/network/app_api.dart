@@ -32,7 +32,6 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
 
     var request = http.MultipartRequest(method, Uri.parse(_baseUrl + endPoint));
 
-
     if (data != null) {
       request.fields.addAll(data);
     }
@@ -48,7 +47,8 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
 
     if(response.statusCode == 401){
       if(isAuth){
-        //authCubit.add(LogOutEvent(navigatorKey.currentState!.context));
+        await authCubit.logout();
+        throw Exception('Unauthorized');
       } else {
         throw Exception('Unauthorized');
       }
@@ -60,14 +60,6 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
 
     if(response.statusCode == 403){
       throw Exception('Forbidden');
-    }
-
-    if(response.statusCode == 404){
-      throw Exception('Target Not Found');
-    }
-
-    if(response.statusCode == 500){
-      throw Exception('Internal Server Error');
     }
 
     if(response.statusCode == 503){

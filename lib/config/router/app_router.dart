@@ -8,7 +8,7 @@ import '../../features/auth/presentation/pages/signup.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   '/': (context) => SplashScreen(),
-  '/home': (context) =>  HomePage(),
-  '/login': (context) =>  LoginPage(),
-  '/Register': (context) =>  SignUpPage(),
+  '/home': (context) =>  const HomePage(),
+  '/login': (context) =>  const LoginPage(),
+  '/Register': (context) =>  const SignUpPage(),
 };

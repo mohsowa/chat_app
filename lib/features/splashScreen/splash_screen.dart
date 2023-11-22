@@ -41,14 +41,12 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   Future<void> _checkAuth() async {
     await di.AuthInit();
-    final authCubit = di.sl<AuthCubit>();
+    final authCubit = di.sl.get<AuthCubit>();
     await authCubit.checkCachedUser();
     if (authCubit.state is AuthLoaded) {
-      print('Authed');
-      Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
-      print('Not Authed');
-      Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+      Navigator.pushReplacementNamed(context, '/login');
     }
   }
 

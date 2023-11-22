@@ -33,18 +33,18 @@ class _LoginPageState extends State<LoginPage> {
     'password': false,
   };
 
-  final cubit = AuthCubit(di.sl.get());
+  final authCubit = di.sl.get<AuthCubit>();
   
 
   _loginViaEmail() {
-    cubit.signInWithEmailAndPassword(
+    authCubit.signInWithEmailAndPassword(
       _emailController.text,
       _emailPasswordController.text,
     );
   }
 
   _loginViaUsername() {
-    cubit.signInWithUsernameAndPassword(
+    authCubit.signInWithUsernameAndPassword(
       _usernameController.text,
       _usernamePasswordController.text,
     );
@@ -54,8 +54,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder(
-      bloc: cubit,
+      bloc: authCubit,
       builder: (context, state) {
+        print(state);
+
         // states handler
         if (state is AuthLoading) {
           // Show the loading widget on top of your main widget.
@@ -71,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         }
 
-        if (state is AuthError) {
+        else if (state is AuthError) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -79,12 +81,14 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           });
-          cubit.clearAuthState();
+          authCubit.clearAuthState();
         }
-        if (state is AuthLoaded) {
+
+
+        else if (state is AuthLoaded) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             Navigator.of(context).pushNamedAndRemoveUntil(
-                '/MainPages', (Route<dynamic> route) => false);
+                '/home', (Route<dynamic> route) => false);
           });
         }
 
@@ -546,34 +550,6 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: const Text(
                             'Sign up',
-                            style: TextStyle(
-                              color: Color.fromRGBO(64, 194, 210, 1),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Skip and go to The Home ',
-                          style: TextStyle(
-                            color: Color.fromRGBO(10, 44, 64, 1),
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacementNamed(
-                                context, '/home');
-                          },
-                          child: const Text(
-                            'Skip',
                             style: TextStyle(
                               color: Color.fromRGBO(64, 194, 210, 1),
                               fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:chat_app/features/auth/domain/entities/user.dart';
 import 'package:chat_app/features/auth/domain/repositories/auth_repo.dart';
 import 'package:equatable/equatable.dart';
@@ -40,8 +41,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> signInWithUsernameAndPassword(String email, String password) async {
     emit(AuthLoading());
-    final failureOrUser = await repository.signInWithEmailAndPassword(
-        email, password);
+    final failureOrUser = await repository.signInWithUsernameAndPassword(email, password);
     failureOrUser.fold(
             (failure) => emit(AuthError(message: failure.message)),
             (user) {
@@ -50,6 +50,32 @@ class AuthCubit extends Cubit<AuthState> {
         }
     );
   }
+
+  // signup
+  Future<void> signup(String name, String email, String username, String password) async {
+    emit(AuthLoading());
+    final failureOrUser = await repository.signup(name, email, username, password);
+    failureOrUser.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (user) {
+        this.user = user;
+        emit(AuthLoaded(user: user));
+      }
+    );
+  }
+
+  // logout
+  Future<void> logout() async {
+    emit(AuthLoading());
+    final failureOrUnit = await repository.logout(user.access_token!);
+    failureOrUnit.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (unit) {
+        emit(AuthInitial());
+      }
+    );
+  }
+
 
   // clear auth state
   Future<void> clearAuthState() async {

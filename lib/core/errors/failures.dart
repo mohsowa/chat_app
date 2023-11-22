@@ -21,3 +21,12 @@ class EmptyCacheFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+class OfflineFailure extends Failure {
+  @override
+  final String message;
+
+  OfflineFailure({this.message = 'No internet connection'});
+  @override
+  List<Object?> get props => [];
+}

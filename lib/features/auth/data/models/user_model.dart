@@ -2,20 +2,18 @@ import 'package:chat_app/features/auth/domain/entities/user.dart';
 
 class UserModel extends User {
   const UserModel({
-    required int id,
+    required int? id,
     required String name,
     required String email,
     required String username,
-    String? avatar,
     String? access_token,
   }) : super(
           id: id,
           name: name,
           email: email,
           username: username,
-          avatar: avatar,
-          access_token: access_token
-  );
+          access_token: access_token,
+        );
 
   @override
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -24,18 +22,16 @@ class UserModel extends User {
       name: json['name'],
       email: json['email'],
       username: json['username'],
-      avatar: json['avatar'],
       access_token: json['access_token'],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     return {
-      'id': id,
+      'id': id.toString(),
       'name': name,
       'email': email,
       'username': username,
-      'avatar': avatar,
       'access_token': access_token!,
     };
   }
@@ -43,12 +39,11 @@ class UserModel extends User {
   @override
   factory UserModel.fromEntity(User user) {
     return UserModel(
-      id: int.parse(user.id.toString()),
+      id: user.id,
       name: user.name,
       email: user.email,
       username: user.username,
-      avatar: user.avatar,
-      access_token: user.access_token ?? '',
+      access_token: user.access_token!,
     );
   }
 

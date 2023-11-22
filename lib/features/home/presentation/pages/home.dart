@@ -1,5 +1,7 @@
 import 'package:chat_app/config/themes/app_style.dart';
 import 'package:flutter/material.dart';
+import 'package:chat_app/features/auth/auth_di.dart' as di;
+import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 
 import 'explore.dart';
 import 'my_chat.dart';
@@ -12,6 +14,8 @@ class HomePage extends StatefulWidget {
 }
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0; // For tabs
+  final user = di.getUser();
+  final authCubit = di.sl<AuthCubit>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class _HomePageState extends State<HomePage> {
           ),
           backgroundColor: theme_darkblue,
           elevation: 0,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(30),
             ),
@@ -48,12 +52,12 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildTopSection() {
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _buildHeader(),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           _buildSearchAndTabs(),
         ],
       ),
@@ -65,18 +69,18 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Column(
+         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Welcome Back', // actual username
               style: TextStyle(color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w300),
             ),
             Text(
-              "Khalid", // actual status
-              style: TextStyle(color: Colors.white,
+              user.name, // actual username
+              style: const TextStyle(color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold),
             ),
@@ -85,15 +89,16 @@ class _HomePageState extends State<HomePage> {
         Row(
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.light_mode, color: Colors.white),
+              icon: const Icon(Icons.light_mode, color: Colors.white),
               onPressed: () {
                 // TODO: Implement light/dark mode toggle
               },
             ),
             IconButton(
-              icon: Icon(Icons.logout, color: Colors.white),
+              icon: const Icon(Icons.logout, color: Colors.white),
               onPressed: () {
-                // TODO: Implement logout functionality
+                authCubit.logout();
+                Navigator.pushReplacementNamed(context, '/login');
               },
             ),
           ],
@@ -104,8 +109,8 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildSearchAndTabs() {
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(25),
@@ -120,7 +125,7 @@ class _HomePageState extends State<HomePage> {
           TextField(
             decoration: InputDecoration(
               hintText: 'Search',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide.none,

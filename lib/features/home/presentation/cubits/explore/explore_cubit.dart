@@ -14,6 +14,10 @@ class ExploreCubit extends Cubit<ExploreState> {
     emit(ExploreLoading());
     final result = await repository.searchExplore(query);
     result.fold((l) => emit(ExploreError(message: l.message)), (users) {
+      if (users.isEmpty) {
+        emit(ExploreEmpty());
+        return;
+      }
       emit(ExploreLoaded(users: users));
     });
   }

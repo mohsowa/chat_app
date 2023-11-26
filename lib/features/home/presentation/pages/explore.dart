@@ -55,6 +55,15 @@ class _ExploreState extends State<Explore> {
                             size: 40,
                           );
                         },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: themeBlue,
+                              backgroundColor: themePink,
+                            ),
+                          );
+                        }
                       ),
                     ),
                     title: Text(user.name),
@@ -70,8 +79,21 @@ class _ExploreState extends State<Explore> {
               );
             },
           );
-        } else {
-          return Center(child: Text('No users found'));
+        }else if (state is ExploreError) {
+          return Center(child: Text(state.message));
+        } else if (state is ExploreEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.search_off_rounded, size: 60, color: themeDarkBlue.withOpacity(0.7),),
+                Text('No users found', style: TextStyle(color: themeDarkBlue.withOpacity(0.7)),),
+              ],
+            ),
+          );
+        }
+        else {
+          return const Center();
         }
       },
     );

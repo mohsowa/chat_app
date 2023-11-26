@@ -23,3 +23,6 @@ class ExploreLoaded extends ExploreState {
   const ExploreLoaded({required this.users});
 }
 
+class ExploreEmpty extends ExploreState {}
+
+

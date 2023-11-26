@@ -104,7 +104,7 @@ class MyChats extends StatelessWidget {
               chat['unreadCount'].toString(),
               style: TextStyle(fontSize: 12, color: Colors.white),
             ),
-            backgroundColor: theme_green,
+            backgroundColor: themeBlue,
           ),
         SizedBox(height: 4),
         Text(

@@ -28,9 +28,8 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
       };
     }
 
-
-
     var request = http.MultipartRequest(method, Uri.parse(_baseUrl + endPoint));
+
 
     if (data != null) {
       request.fields.addAll(data);
@@ -41,6 +40,7 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
     }
 
     request.headers.addAll(headers);
+
 
     http.StreamedResponse response = await client.send(request);
 
@@ -72,6 +72,7 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
 
     return response;
   } on Exception catch (e) {
+    print(e.toString());
     throw ServerException(message: e.toString());
   }
 

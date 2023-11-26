@@ -1,8 +1,9 @@
 import 'package:chat_app/config/themes/app_style.dart';
+import 'package:chat_app/features/home/presentation/cubits/explore/explore_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/features/auth/auth_di.dart' as di;
+import 'package:chat_app/features/auth/auth_di.dart' as auth_di;
 import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
-
+import 'package:chat_app/features/home/home_di.dart' as home_di;
 import 'explore.dart';
 import 'my_chat.dart';
 
@@ -12,10 +13,41 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
+
+
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0; // For tabs
-  final user = di.getUser();
-  final authCubit = di.sl<AuthCubit>();
+  final user = auth_di.getUser();
+
+  final authCubit = auth_di.sl<AuthCubit>();
+  late ExploreCubit exploreCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    home_di.homeInit();
+    exploreCubit = home_di.sl<ExploreCubit>();
+  }
+
+  // searchController
+  final TextEditingController searchController = TextEditingController();
+
+  void _search() {
+    String query = searchController.text;
+
+    // Search in My Chats
+    if (_selectedIndex == 0) {
+      /// TODO: Implement search in My Chats
+    }else{
+      // check if query length is greater than 2
+      if (query.length > 2) {
+        exploreCubit.searchExplore(query);
+      }
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +61,7 @@ class _HomePageState extends State<HomePage> {
           flexibleSpace: SafeArea(
             child: _buildTopSection(),
           ),
-          backgroundColor: theme_darkblue,
+          backgroundColor: themeDarkBlue,
           elevation: 0,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
@@ -123,6 +155,10 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min, // Add this line
         children: <Widget>[
           TextField(
+            controller: searchController,
+            onChanged: (value) {
+              _search();
+            },
             decoration: InputDecoration(
               hintText: 'Search',
               prefixIcon: const Icon(Icons.search),

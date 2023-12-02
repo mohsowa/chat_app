@@ -1,11 +1,15 @@
 import 'package:chat_app/config/themes/app_style.dart';
 import 'package:chat_app/features/home/presentation/cubits/explore/explore_cubit.dart';
+import 'package:chat_app/features/home/presentation/cubits/friends/friend_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/features/auth/auth_di.dart' as auth_di;
 import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chat_app/features/home/home_di.dart' as home_di;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'explore.dart';
 import 'my_chat.dart';
+import 'package:chat_app/config/themes/app_style.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,11 +25,16 @@ class _HomePageState extends State<HomePage> {
 
   final authCubit = auth_di.sl<AuthCubit>();
   late ExploreCubit exploreCubit;
+  late FriendCubit friendCubit;
+
+  final String _baseImageUrl =
+      dotenv.env['IMAGE_URL'] ?? 'https://chat.mohsowa.com/api/image';
 
   @override
   void initState() {
     super.initState();
     home_di.homeInit();
+    friendCubit = home_di.sl<FriendCubit>();
     exploreCubit = home_di.sl<ExploreCubit>();
   }
 
@@ -45,8 +54,6 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
-
-
 
 
   @override

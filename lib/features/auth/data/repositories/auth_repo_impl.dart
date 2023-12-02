@@ -24,7 +24,6 @@ class AuthRepoImpl implements AuthRepo {
     try {
       final user = await localDataSource.getCachedUser();
 
-
       // check if user token is valid
       final isValid = await remoteDataSource.checkToken(user.access_token!);
 
@@ -40,8 +39,10 @@ class AuthRepoImpl implements AuthRepo {
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+      print(e.toString());
+      return Left(ServerFailure(message: 'Something went wrong'));
     }
+
   }
 
   //signInWithEmailAndPassword

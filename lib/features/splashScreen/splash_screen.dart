@@ -1,7 +1,7 @@
 import 'package:chat_app/features/auth/auth_di.dart' as di;
 import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
-
+import 'package:chat_app/config/themes/app_style.dart';
 
 class SplashScreen extends StatefulWidget {
   String? nextRoute = 'auth';
@@ -61,7 +61,21 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.chat, size: 100, color: themeBlue,),
+          SizedBox(height: 20,),
+          CircularProgressIndicator(
+            valueColor: _controller.drive(ColorTween(
+              begin: themeBlue,
+              end: themePink,
+            )),
+            backgroundColor: themePink,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -27,13 +27,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<bool> checkToken(String token) async {
+
     final res = await appApiRequest(
+      token: token,
       endPoint: '/user/verify',
       method: 'GET',
     );
-
-    final resBody = await res.stream.bytesToString();
-    print(resBody);
 
     if (res.statusCode == 200) {
       return Future.value(true);

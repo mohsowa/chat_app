@@ -8,7 +8,7 @@ final String _baseUrl = dotenv.env['API_URL'] ?? 'https://chat.mohsowa.com/api';
 final client = sl.get<http.Client>();
 final authCubit = sl.get<AuthCubit>();
 
-Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.MultipartFile? file, required String endPoint,bool? auth, required String method, bool isAuth = true}) async {
+Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.MultipartFile? file, required String endPoint,bool? auth, required String method, bool isAuth = true, String? token}) async {
 
   try{
 
@@ -21,12 +21,20 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-    }else{
+    }else if(token != null){
+      headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+    }
+    else{
       headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       };
     }
+
 
     var request = http.MultipartRequest(method, Uri.parse(_baseUrl + endPoint));
 
@@ -43,6 +51,7 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
 
 
     http.StreamedResponse response = await client.send(request);
+
 
 
     if(response.statusCode == 401){

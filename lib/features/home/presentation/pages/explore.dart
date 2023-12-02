@@ -1,4 +1,5 @@
 import 'package:chat_app/features/home/presentation/cubits/explore/explore_cubit.dart';
+import 'package:chat_app/features/home/presentation/cubits/friends/friend_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/config/themes/app_style.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,13 +14,13 @@ class Explore extends StatefulWidget {
 
 class _ExploreState extends State<Explore> {
   final exploreCubit = di.sl<ExploreCubit>();
+  final friendCubit = di.sl<FriendCubit>();
   final String _baseImageUrl =
       dotenv.env['IMAGE_URL'] ?? 'https://chat.mohsowa.com/api/image';
 
   @override
   Widget build(BuildContext context) {
     // Dummy data for demonstration
-
     return BlocBuilder<ExploreCubit, ExploreState>(
       bloc: exploreCubit,
       builder: (context, state) {
@@ -69,9 +70,12 @@ class _ExploreState extends State<Explore> {
                     title: Text(user.name),
                     subtitle: Text('@${user.username}'),
                     trailing: IconButton(
-                      icon: Icon(Icons.person_add),
+                      icon: const Icon(Icons.person_add),
                       onPressed: () {
-                        // Handle the add friend action
+                        // Send friend request
+                        friendCubit.addFriend(user.id!);
+                        exploreCubit.searchExplore('');
+                        /// TODO: Open chat Page
                       },
                     ),
                   ),
@@ -99,30 +103,3 @@ class _ExploreState extends State<Explore> {
     );
   }
 }
-
-/*
-return Padding(
-          padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-          child: InkWell(
-            onTap: () {
-              // Handle the tap event, e.g., navigate to user profile or send friend request
-              print('Tapped on ${user['name']}');
-            },
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user['imageUrl']),
-                radius: 28,
-              ),
-              title: Text(user['name']),
-              subtitle: Text(user['info']),
-              trailing: IconButton(
-                icon: Icon(Icons.person_add),
-                onPressed: () {
-                  // Handle the add friend action
-                  print('Add ${user['name']} as a friend');
-                },
-              ),
-            ),
-          ),
-        );
- */

@@ -29,7 +29,14 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<UserModel> getCachedUser() async {
     final jsonUser = sharedPreferences.getString('user');
     if(jsonUser != null){
-      final user = UserModel.fromJson(json.decode(jsonUser));
+      // change user id to int
+      UserModel user = UserModel(
+        id: int.parse(json.decode(jsonUser)['id']),
+        name: json.decode(jsonUser)['name'],
+        email: json.decode(jsonUser)['email'],
+        username: json.decode(jsonUser)['username'],
+        access_token: json.decode(jsonUser)['access_token'],
+      );
       return Future.value(user);
     } else {
       throw EmptyCacheException(message: 'No user cached');

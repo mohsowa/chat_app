@@ -4,7 +4,6 @@ import 'package:chat_app/core/errors/excptions.dart';
 import 'package:chat_app/core/network/app_api.dart';
 import 'package:chat_app/features/auth/data/models/user_model.dart';
 import 'package:chat_app/features/home/data/models/friends_model.dart';
-import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -15,6 +14,12 @@ abstract class RemoteDataSource {
   Future<FriendsModel> addFriend(int friendId);
   //getFriends
   Future<List<UserModel>> getFriends();
+  // getFriendshipStatus
+  Future<FriendsModel> getFriendshipStatus(int friendId);
+  // acceptFriend
+  Future<FriendsModel> acceptFriend(int id);
+  // rejectFriend
+  Future<FriendsModel> rejectFriend(int id);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -62,7 +67,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           method: 'POST'
       );
       final resBody = json.decode(await res.stream.bytesToString());
-      print(resBody);
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
@@ -85,13 +89,84 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           method: 'GET'
       );
       final resBody = json.decode(await res.stream.bytesToString());
-      print(resBody);
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
       final friends = resBody['friends'].map<UserModel>((friend) {
         return UserModel.fromJson(friend);
       }).toList();
+      return friends;
+    } on ServerException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  //getFriendshipStatus
+  @override
+  Future<FriendsModel> getFriendshipStatus(int friendId) async {
+    try {
+      final res = await appApiRequest(
+          auth: true,
+          endPoint: '/friend/get/$friendId',
+          method: 'GET',
+      );
+      final resBody = json.decode(await res.stream.bytesToString());
+      if (res.statusCode != 200) {
+        throw ServerException(message: resBody['message']);
+      }
+      final friends = FriendsModel.fromJson(resBody['friend']);
+      return friends;
+    } on ServerException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  //acceptFriend
+  @override
+  Future<FriendsModel> acceptFriend(int id) async {
+    try {
+      final res = await appApiRequest(
+          auth: true,
+          endPoint: '/friend/accept',
+          method: 'POST',
+          data: {
+            'id': id.toString(),
+          }
+      );
+      final resBody = json.decode(await res.stream.bytesToString());
+      if (res.statusCode != 200) {
+        throw ServerException(message: resBody['message']);
+      }
+      final friends = FriendsModel.fromJson(resBody['friend']);
+      return friends;
+    } on ServerException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  //rejectFriend
+  @override
+  Future<FriendsModel> rejectFriend(int id) async {
+    try {
+      final res = await appApiRequest(
+          auth: true,
+          endPoint: '/friend/reject',
+          method: 'POST',
+          data: {
+            'id': id.toString(),
+          }
+      );
+      final resBody = json.decode(await res.stream.bytesToString());
+      if (res.statusCode != 200) {
+        throw ServerException(message: resBody['message']);
+      }
+      final friends = FriendsModel.fromJson(resBody['friend']);
       return friends;
     } on ServerException catch (e) {
       throw ServerException(message: e.message);

@@ -49,5 +49,44 @@ class FriendRepositoryImpl extends FriendRepository {
     }
   }
 
+  //getFriendshipStatus
+  @override
+  Future<Either<Failure, FriendsModel>> getFriendshipStatus(int friendId) async {
+    try {
+      final friends = await remoteDataSource.getFriendshipStatus(friendId);
+      return Right(friends);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  //acceptFriend
+  @override
+  Future<Either<Failure, FriendsModel>> acceptFriend(int id) async {
+    try {
+      final friends = await remoteDataSource.acceptFriend(id);
+      return Right(friends);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  //rejectFriend
+  @override
+  Future<Either<Failure, FriendsModel>> rejectFriend(int id) async {
+    try {
+      final friends = await remoteDataSource.rejectFriend(id);
+      return Right(friends);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
 
 }

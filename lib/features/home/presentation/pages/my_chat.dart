@@ -1,9 +1,9 @@
 import 'package:chat_app/config/themes/app_style.dart';
 import 'package:chat_app/features/home/presentation/cubits/friends/friend_cubit.dart';
+import 'package:chat_app/features/home/presentation/pages/chatting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../../../chatting/presentation/chatting.dart';
 import 'package:chat_app/features/home/home_di.dart' as home_di;
 
 
@@ -48,8 +48,15 @@ class _MyChatsState extends State<MyChats> {
                 child: InkWell(
                   child: ListTile(
                     onTap: () {
-                      // Handle the tap event, e.g., navigate to user profile or send friend request
-                      print('$_baseImageUrl${user.avatar}');
+                      // open chat screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            friend: user,
+                          ),
+                        ),
+                      );
                     },
                     leading: CircleAvatar(
                       backgroundColor: themeLightGrey,

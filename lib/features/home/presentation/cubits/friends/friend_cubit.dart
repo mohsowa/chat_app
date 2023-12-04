@@ -28,4 +28,31 @@ class FriendCubit extends Cubit<FriendState> {
     });
   }
 
+  // getFriendshipStatus
+  Future<void> getFriendshipStatus(int friendId) async {
+    emit(FriendShipLoading());
+    final result = await repository.getFriendshipStatus(friendId);
+    result.fold((l) => emit(FriendError(message: l.message)), (friends) {
+      emit(FriendShipLoaded(friends: friends));
+    });
+  }
+
+  // acceptFriend
+  Future<void> acceptFriend(int id) async {
+    emit(FriendShipLoading());
+    final result = await repository.acceptFriend(id);
+    result.fold((l) => emit(FriendError(message: l.message)), (friends) {
+      emit(FriendShipLoaded(friends: friends));
+    });
+  }
+
+  // rejectFriend
+  Future<void> rejectFriend(int id) async {
+    emit(FriendShipLoading());
+    final result = await repository.rejectFriend(id);
+    result.fold((l) => emit(FriendError(message: l.message)), (friends) {
+      emit(FriendShipLoaded(friends: friends));
+    });
+  }
+
 }

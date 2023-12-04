@@ -38,3 +38,14 @@ class FriendListLoaded extends FriendState {
   List<Object> get props => [friends];
 
 }
+
+class FriendShipLoading extends FriendState {}
+
+class FriendShipLoaded extends FriendState {
+  final FriendsModel friends;
+
+  const FriendShipLoaded({required this.friends});
+
+  @override
+  List<Object> get props => [friends];
+}

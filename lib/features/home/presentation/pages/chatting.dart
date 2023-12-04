@@ -1,6 +1,7 @@
 import 'package:chat_app/config/themes/app_style.dart';
 import 'package:chat_app/features/auth/domain/entities/user.dart';
 import 'package:chat_app/features/home/presentation/cubits/friends/friend_cubit.dart';
+import 'package:chat_app/features/home/presentation/cubits/messages/messages_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,11 +24,13 @@ class _ChatPageState extends State<ChatPage> {
   final String _baseImageUrl =
       dotenv.env['IMAGE_URL'] ?? 'https://chat.mohsowa.com/api/image';
   final friendCubit = home_di.sl<FriendCubit>();
+  late MessagesCubit messagesCubit;
   final user = auth_di.getUser();
 
   @override
   void initState() {
     super.initState();
+    messagesCubit = home_di.sl<MessagesCubit>();
     friendCubit.getFriendshipStatus(widget.friend.id!);
   }
 

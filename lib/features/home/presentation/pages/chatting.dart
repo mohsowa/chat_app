@@ -1,5 +1,6 @@
 import 'package:chat_app/config/themes/app_style.dart';
 import 'package:chat_app/features/auth/domain/entities/user.dart';
+import 'package:chat_app/features/home/data/models/message_model.dart';
 import 'package:chat_app/features/home/presentation/cubits/friends/friend_cubit.dart';
 import 'package:chat_app/features/home/presentation/cubits/messages/messages_cubit.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:chat_app/features/home/home_di.dart' as home_di;
 import 'package:chat_app/features/auth/auth_di.dart' as auth_di;
+import 'dart:async';
 
 class ChatPage extends StatefulWidget {
   final User friend;
@@ -27,11 +29,19 @@ class _ChatPageState extends State<ChatPage> {
   late MessagesCubit messagesCubit;
   final user = auth_di.getUser();
 
+  Timer? timer;
+
   @override
   void initState() {
     super.initState();
     messagesCubit = home_di.sl<MessagesCubit>();
     friendCubit.getFriendshipStatus(widget.friend.id!);
+
+    messagesCubit.getMessages(friend_id: widget.friend.id!);
+
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      messagesCubit.getMessages(friend_id: widget.friend.id!);
+    });
   }
 
   void acceptFriendRequest(id) {
@@ -41,6 +51,13 @@ class _ChatPageState extends State<ChatPage> {
   void rejectFriendRequest(id) {
     friendCubit.rejectFriend(id);
   }
+
+  // call messagesCubit.getMessages every 1 second
+
+
+
+
+  final _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -230,25 +247,133 @@ class _ChatPageState extends State<ChatPage> {
 
             // user is accepted friend request
           } else {
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text('Message $index'),
-                      );
-                    },
-                  ),
-                ),
-                _buildMessageInputField(),
-              ],
-            );
+            return _buildMessages();
           }
         } else {
           return const Center(
             child: Text('Error loading chat'),
+          );
+        }
+      },
+    );
+  }
+
+  List<MessageModel> messages = [];
+  BlocBuilder<MessagesCubit, MessagesState> _buildMessages() {
+    return BlocBuilder<MessagesCubit, MessagesState>(
+      bloc: messagesCubit,
+      builder: (context, state) {
+        print(state);
+        if (state is MessagesLoadedList) {
+          messages = state.messages;
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: state.messages.length,
+                  itemBuilder: (context, index) {
+                    final msg = state.messages[index];
+                    if(msg.sender_id == user.id) {
+                      print('sender');
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(150, 10, 0, 10),
+                          alignment: Alignment.centerRight,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(20),
+                            color: themeDarkBlue.withOpacity(0.8),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                          child: Text(
+                            msg.message!,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    } else {
+                      print('receiver');
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(0, 10, 150, 10),
+                          alignment: Alignment.centerLeft,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(20),
+                            color: themeLightGrey.withOpacity(0.8),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                          child: Text(
+                            msg.message!,
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+              _buildMessageInputField(),
+            ],
+          );
+        } else {
+         return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final msg = messages[index];
+                    if(msg.sender_id == user.id) {
+                      print('sender');
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(150, 10, 0, 10),
+                          alignment: Alignment.centerRight,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(20),
+                            color: themeDarkBlue.withOpacity(0.8),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                          child: Text(
+                            msg.message!,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    } else {
+                      print('receiver');
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          margin: const EdgeInsets.fromLTRB(0, 10, 150, 10),
+                          alignment: Alignment.centerLeft,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(20),
+                            color: themeLightGrey.withOpacity(0.8),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                          child: Text(
+                            msg.message!,
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+              _buildMessageInputField(),
+            ],
           );
         }
       },
@@ -269,6 +394,10 @@ class _ChatPageState extends State<ChatPage> {
           ),
           Expanded(
             child: TextField(
+              onChanged: (value) {
+                _messageController.text = value;
+              },
+              controller: _messageController,
               decoration: InputDecoration(
                 hintText: 'Send a message...',
                 border: OutlineInputBorder(
@@ -285,7 +414,23 @@ class _ChatPageState extends State<ChatPage> {
           IconButton(
             icon: const Icon(Icons.send),
             onPressed: () {
-              // TODO: Implement sending message functionality
+              if (_messageController.text.isNotEmpty) {
+                // if text more than 255 characters send error
+                if (_messageController.text.length > 254) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Message cannot be more than 255 characters'),
+                    ),
+                  );
+                }else{
+                  messagesCubit.sendMessage(
+                    friend_id: widget.friend.id!,
+                    message: _messageController.text,
+                    type: 'text',
+                  );
+                }
+              }
+              _messageController.text = '';
             },
           ),
         ],

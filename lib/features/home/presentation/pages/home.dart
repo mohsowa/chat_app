@@ -47,11 +47,9 @@ class _HomePageState extends State<HomePage> {
   void _search() {
     String query = searchController.text;
 
-    // Search in My Chats
     if (_selectedIndex == 0) {
-      /// TODO: Implement search in My Chats
-    }else{
-      // check if query length is greater than 2
+      friendCubit.searchFriends(query);
+    } else {
       if (query.length > 2) {
         exploreCubit.searchExplore(query);
       }

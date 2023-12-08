@@ -172,8 +172,7 @@ class _ChatPageState extends State<ChatPage> {
                     color: Theme.of(context)
                         .textTheme
                         .bodyLarge!
-                        .color!
-                        .withOpacity(0.7),
+                        .color!,
                   ),
                   Text(
                     'Friend request has been sent',
@@ -181,8 +180,7 @@ class _ChatPageState extends State<ChatPage> {
                         color: Theme.of(context)
                             .textTheme
                             .bodyLarge!
-                            .color!
-                            .withOpacity(0.7)),
+                            .color!),
                   ),
                 ],
               ),
@@ -198,11 +196,11 @@ class _ChatPageState extends State<ChatPage> {
                   Icon(
                     Icons.person_add,
                     size: 60,
-                    color: themeDarkBlue.withOpacity(0.7),
+                    color: Theme.of(context).textTheme.bodyLarge!.color!,
                   ),
                   Text(
                     'Friend request pending',
-                    style: TextStyle(color: themeDarkBlue.withOpacity(0.7)),
+                    style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color!),
                   ),
                   const SizedBox(
                     height: 20,

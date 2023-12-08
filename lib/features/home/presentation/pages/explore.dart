@@ -67,10 +67,20 @@ class _ExploreState extends State<Explore> {
                         }
                       ),
                     ),
-                    title: Text(user.name),
-                    subtitle: Text('@${user.username}'),
+                    title: Text(user.name,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                    )
+                    ),
+                    subtitle: Text('@${user.username}',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.7),
+                    )
+                    ),
                     trailing: IconButton(
-                      icon: const Icon(Icons.person_add),
+                      icon: Icon(Icons.person_add
+                      , color: Theme.of(context).textTheme.bodyLarge!.color,
+                      ),
                       onPressed: () {
                         // Send friend request
                         friendCubit.addFriend(user.id!);

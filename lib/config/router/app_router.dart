@@ -1,5 +1,6 @@
 import 'package:chat_app/features/auth/presentation/pages/login.dart';
 import 'package:chat_app/features/home/presentation/pages/home.dart';
+import 'package:chat_app/features/profile/presentation/pages/profile.dart';
 import 'package:chat_app/features/splashScreen/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -11,4 +12,5 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/home': (context) =>  const HomePage(),
   '/login': (context) =>  const LoginPage(),
   '/Register': (context) =>  const SignUpPage(),
+  '/profile': (context) =>  ProfilePage(),
 };

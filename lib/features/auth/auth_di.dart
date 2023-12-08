@@ -11,11 +11,11 @@ import 'package:http/http.dart' as http;
 
 
 final sl = GetIt.instance;
-//bool _isInit = false;
+bool _isInit = false;
 
 Future<void> AuthInit() async {
 
-  //if (_isInit) return;
+  if(_isInit) return;
 
   print('AuthInit');
 
@@ -55,7 +55,7 @@ Future<void> AuthInit() async {
   sl.registerLazySingleton(() => http.Client());
 
 
-  //_isInit = true;
+  _isInit = true;
 
 
 

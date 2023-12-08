@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:chat_app/features/auth/auth_di.dart' as auth_di;
 import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chat_app/features/home/home_di.dart' as home_di;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'explore.dart';
 import 'my_chat.dart';
-import 'package:chat_app/config/themes/app_style.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0; // For tabs
   final user = auth_di.getUser();
 
-  final authCubit = auth_di.sl<AuthCubit>();
+  late AuthCubit authCubit;
   late ExploreCubit exploreCubit;
   late FriendCubit friendCubit;
 
@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    authCubit = home_di.sl<AuthCubit>();
     home_di.homeInit();
     friendCubit = home_di.sl<FriendCubit>();
     exploreCubit = home_di.sl<ExploreCubit>();
@@ -103,46 +104,72 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHeader() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Welcome Back', // actual username
-              style: TextStyle(color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w300),
+
+  BlocBuilder<AuthCubit, AuthState> _buildHeader() {
+    return BlocBuilder<AuthCubit, AuthState>(
+      bloc: authCubit,
+      builder: (context, state) {
+        if (state is AuthLoading) {
+          return  Center(
+            child: CircularProgressIndicator(
+              color: white,
             ),
-            Text(
-              user.name, // actual username
-              style: const TextStyle(color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+          );
+        } else if (state is AuthLoaded) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Welcome Back', // actual username
+                    style: TextStyle(color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/profile');
+                    },
+                    child: Text(
+                      state.user.name,
+                      style: const TextStyle(color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.light_mode, color: Colors.white),
+                    onPressed: () {
+                      // TODO: Implement light/dark mode toggle
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.logout, color: Colors.white),
+                    onPressed: () {
+                      authCubit.logout();
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                  ),
+                ],
+              ),
+            ],
+          );
+        } else {
+          return const Center(
+            child: Text(
+              'Error',
+              style: TextStyle(color: Colors.white),
             ),
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.light_mode, color: Colors.white),
-              onPressed: () {
-                // TODO: Implement light/dark mode toggle
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.logout, color: Colors.white),
-              onPressed: () {
-                authCubit.logout();
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-            ),
-          ],
-        ),
-      ],
+          );
+        }
+      },
     );
   }
 

@@ -7,12 +7,14 @@ class UserModel extends User {
     required String email,
     required String username,
     String? access_token,
+    required String avatar,
   }) : super(
           id: id,
           name: name,
           email: email,
           username: username,
           access_token: access_token,
+          avatar: avatar,
         );
 
   @override
@@ -23,6 +25,7 @@ class UserModel extends User {
       email: json['email'],
       username: json['username'],
       access_token: json['access_token'],
+      avatar: json['avatar']?? '',
     );
   }
 
@@ -33,6 +36,7 @@ class UserModel extends User {
       'email': email,
       'username': username,
       'access_token': access_token!,
+      'avatar': avatar,
     };
   }
 
@@ -44,6 +48,7 @@ class UserModel extends User {
       email: user.email,
       username: user.username,
       access_token: user.access_token!,
+      avatar: user.avatar,
     );
   }
 

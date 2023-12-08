@@ -44,6 +44,12 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   void acceptFriendRequest(id) {
     friendCubit.acceptFriend(id);
   }
@@ -53,8 +59,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   // call messagesCubit.getMessages every 1 second
-
-
 
 
   final _messageController = TextEditingController();
@@ -130,7 +134,6 @@ class _ChatPageState extends State<ChatPage> {
     return BlocBuilder<FriendCubit, FriendState>(
       bloc: friendCubit,
       builder: (context, state) {
-        print(state);
         if (state is FriendShipLoading) {
           return  Center(child: CircularProgressIndicator(
             color: themeBlue,
@@ -271,12 +274,14 @@ class _ChatPageState extends State<ChatPage> {
               Expanded(
                 child: ListView.builder(
                   itemCount: state.messages.length,
+                  reverse: true,
+                  scrollDirection: Axis.vertical,
+                  semanticChildCount: state.messages.length,
                   itemBuilder: (context, index) {
                     final msg = state.messages[index];
                     if(msg.sender_id == user.id) {
-                      print('sender');
                       return Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(150, 10, 0, 10),
                           alignment: Alignment.centerRight,
@@ -294,9 +299,8 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                       );
                     } else {
-                      print('receiver');
                       return Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.all(10),
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(0, 10, 150, 10),
                           alignment: Alignment.centerLeft,
@@ -326,12 +330,14 @@ class _ChatPageState extends State<ChatPage> {
               Expanded(
                 child: ListView.builder(
                   itemCount: messages.length,
+                  reverse: true,
+                  scrollDirection: Axis.vertical,
+                  semanticChildCount: messages.length,
                   itemBuilder: (context, index) {
                     final msg = messages[index];
                     if(msg.sender_id == user.id) {
-                      print('sender');
                       return Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(150, 10, 0, 10),
                           alignment: Alignment.centerRight,
@@ -349,9 +355,8 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                       );
                     } else {
-                      print('receiver');
                       return Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.all(10),
                         child: Container(
                           margin: const EdgeInsets.fromLTRB(0, 10, 150, 10),
                           alignment: Alignment.centerLeft,
@@ -386,12 +391,6 @@ class _ChatPageState extends State<ChatPage> {
       color: Colors.white,
       child: Row(
         children: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.emoji_emotions),
-            onPressed: () {
-              // TODO: Implement emoji picker
-            },
-          ),
           Expanded(
             child: TextField(
               onChanged: (value) {

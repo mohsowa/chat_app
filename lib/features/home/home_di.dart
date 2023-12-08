@@ -16,14 +16,9 @@ import 'package:http/http.dart' as http;
 
 
 final sl = GetIt.instance;
-bool _isInitialized = false;
 
 Future<void> homeInit() async {
 
-  if (_isInitialized) {
-    // Registration has already occurred, so do nothing.
-    return;
-  }
 
 
   print('HomeInit');
@@ -70,8 +65,6 @@ Future<void> homeInit() async {
         sharedPreferences: sl(),
       )
   );
-
-  _isInitialized = true;
 
 }
 

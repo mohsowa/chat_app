@@ -5,7 +5,7 @@ class User extends Equatable {
   final String name;
   final String email;
   final String username;
-  final String? avatar;
+  final String avatar;
   final String? access_token;
 
   const User({
@@ -13,7 +13,7 @@ class User extends Equatable {
     required this.name,
     required this.email,
     required this.username,
-    this.avatar,
+    required this.avatar,
     this.access_token,
   });
 

@@ -53,12 +53,11 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
     http.StreamedResponse response = await client.send(request);
 
 
-
     if(response.statusCode == 401){
       if(isAuth){
-        await authCubit.logout();
+        authCubit.logout();
         throw Exception('Unauthorized');
-      } else {
+      }else{
         throw Exception('Unauthorized');
       }
     }
@@ -81,8 +80,7 @@ Future<http.StreamedResponse> appApiRequest({Map<String, String>? data, http.Mul
 
     return response;
   } on Exception catch (e) {
-    print(e.toString());
-    throw ServerException(message: e.toString());
+    throw ServerException(message: 'Server Error, (${e.toString()})');
   }
 
 }

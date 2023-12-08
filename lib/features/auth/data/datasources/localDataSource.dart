@@ -9,6 +9,7 @@ abstract class LocalDataSource {
   Future<UserModel> getCachedUser();
   Future<Unit> cacheUser(UserModel user);
   Future<Unit> cacheToken(String token);
+  Future<String> getCachedToken();
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -36,6 +37,7 @@ class LocalDataSourceImpl implements LocalDataSource {
         email: json.decode(jsonUser)['email'],
         username: json.decode(jsonUser)['username'],
         access_token: json.decode(jsonUser)['access_token'],
+        avatar: json.decode(jsonUser)['avatar']?? '',
       );
       return Future.value(user);
     } else {
@@ -56,6 +58,17 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<Unit> cacheToken(String token) {
     sharedPreferences.setString('token', token);
     return Future.value(unit);
+  }
+
+  // getCachedToken
+  @override
+  Future<String> getCachedToken() async {
+    final token = sharedPreferences.getString('token');
+    if(token != null){
+      return Future.value(token);
+    } else {
+      throw EmptyCacheException(message: 'No token cached');
+    }
   }
 
 

@@ -223,7 +223,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           method: 'GET',
       );
       final resBody = json.decode(await res.stream.bytesToString());
-      print(resBody);
       if (res.statusCode != 200) {
         throw ServerException(message: resBody['message']);
       }
@@ -237,5 +236,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       throw ServerException(message: e.toString());
     }
   }
+
+
+
 
 }

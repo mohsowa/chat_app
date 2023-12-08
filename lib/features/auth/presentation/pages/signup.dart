@@ -105,6 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Scaffold _registerWidget(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),

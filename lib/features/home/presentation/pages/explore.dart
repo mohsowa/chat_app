@@ -90,14 +90,26 @@ class _ExploreState extends State<Explore> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.search_off_rounded, size: 60, color: themeDarkBlue.withOpacity(0.7),),
-                Text('No users found', style: TextStyle(color: themeDarkBlue.withOpacity(0.7)),),
+                Icon(Icons.search_off_rounded, size: 60, color:
+                Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.7),),
+                Text('No users found', style: TextStyle(color:
+                Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.7),),),
               ],
             ),
           );
         }
         else {
-          return const Center();
+          return  Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.search_off_rounded, size: 60, color:
+                Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.7),),
+                Text('No users found', style: TextStyle(color:
+                Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.7),),),
+              ],
+            ),
+          );
         }
       },
     );

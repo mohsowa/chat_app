@@ -133,8 +133,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
-      ),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).primaryColor,
+        ),
+        title: Text('Profile',
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+        ),
+      ),),
       body: _buildAuthState(),
     );
   }
@@ -161,6 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
           print(avatar);
           return Column(
             children: [
+              const SizedBox(height: 20),
               Center(
                 child: Stack(
                   children: [

@@ -20,6 +20,7 @@ class _MyChatsState extends State<MyChats> {
 
   final String _baseImageUrl = dotenv.env['IMAGE_URL'] ?? 'https://chat.mohsowa.com/api/image';
 
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +38,8 @@ class _MyChatsState extends State<MyChats> {
               child: CircularProgressIndicator(
                 color: themeBlue,
                 backgroundColor: themePink,
-              ));
+              )
+          );
         } else if (state is FriendListLoaded) {
           return ListView.builder(
             itemCount: state.friends.length,
@@ -46,30 +48,25 @@ class _MyChatsState extends State<MyChats> {
               return Padding(
                 padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
                 child: InkWell(
+                  onTap: () {
+                    // Open chat screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(friend: user),
+                      ),
+                    );
+                  },
                   child: ListTile(
-                    onTap: () {
-                      // open chat screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatPage(
-                            friend: user,
-                          ),
-                        ),
-                      );
-                    },
-                    leading: CircleAvatar(
-                      backgroundColor: themeLightGrey,
-                      radius: 28,
-                      child: Image.network(
+                    leading: ClipOval(
+                      child: CircleAvatar(
+                        backgroundColor: themeLightGrey,
+                        radius: 28,
+                        child: Image.network(
                           '$_baseImageUrl${user.avatar}',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(
-                              Icons.person,
-                              color: themeDarkBlue,
-                              size: 40,
-                            );
+                            return Icon(Icons.person, color: themeDarkBlue, size: 40);
                           },
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
@@ -79,20 +76,30 @@ class _MyChatsState extends State<MyChats> {
                                 backgroundColor: themePink,
                               ),
                             );
-                          }
+                          },
+                        ),
                       ),
                     ),
-                    title: Text(user.name),
-                    subtitle: Text('@${user.username}'),
+                    title: Text(
+                      user.name,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text('@${user.username}',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                    )
+                    ),
                   ),
                 ),
               );
             },
           );
-        }else if (state is FriendError) {
+        } else if (state is FriendError) {
           return Center(child: Text(state.message));
-        }
-        else {
+        } else {
           return const Center();
         }
       },

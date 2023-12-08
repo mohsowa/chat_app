@@ -7,6 +7,7 @@ import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chat_app/features/home/home_di.dart' as home_di;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../cubits/themecubit.dart';
 import 'explore.dart';
 import 'my_chat.dart';
 
@@ -33,11 +34,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    authCubit = home_di.sl<AuthCubit>();
     home_di.homeInit();
+    authCubit = home_di.sl<AuthCubit>();
     friendCubit = home_di.sl<FriendCubit>();
-    exploreCubit = home_di.sl<ExploreCubit>();
+    exploreCubit = home_di.sl<ExploreCubit>(); // Initialize exploreCubit
   }
+
 
   // searchController
   final TextEditingController searchController = TextEditingController();
@@ -59,32 +61,37 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery
-            .of(context)
-            .size
-            .height * 0.27),
-        child: AppBar(
-          flexibleSpace: SafeArea(
-            child: _buildTopSection(),
-          ),
-          backgroundColor: themeDarkBlue,
-          elevation: 0,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(30),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        return true;
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(MediaQuery
+              .of(context)
+              .size
+              .height * 0.28),
+          child: AppBar(
+            flexibleSpace: SafeArea(
+              child: _buildTopSection(),
+            ),
+            backgroundColor: themeDarkBlue,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(30),
+              ),
             ),
           ),
         ),
-      ),
-      body: Column(
-
-        children: <Widget>[
-          Expanded(
-            child: _selectedIndex == 0 ? MyChats() : Explore(),
-          ),
-        ],
+        body: Column(
+          children: <Widget>[
+            Expanded(
+              child: _selectedIndex == 0 ? MyChats() : Explore(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -147,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                   IconButton(
                     icon: const Icon(Icons.light_mode, color: Colors.white),
                     onPressed: () {
-                      // TODO: Implement light/dark mode toggle
+                      context.read<ThemeCubit>().toggleTheme(context);
                     },
                   ),
                   IconButton(

@@ -1,3 +1,4 @@
+import 'package:chat_app/config/themes/app_style.dart';
 import 'package:chat_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/features/auth/auth_di.dart' as di;
@@ -99,353 +100,151 @@ class _LoginPageState extends State<LoginPage> {
 
   Scaffold _loginWidget(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-          child: Material(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Logo Part
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/images/login_image.png',
-                          height: 120,
+      backgroundColor: white,
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+        child: Material(
+          color: white,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Logo Part
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/images/login_image.png',
+                        height: 120,
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromRGBO(10, 44, 64, 1),
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.none,
                         ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color.fromRGBO(10, 44, 64, 1),
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.none,
-                          ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'We’re happy to see you back again!',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(10, 44, 64, 1),
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.w300,
                         ),
-                        const SizedBox(height: 6),
-                        const Text(
-                          'We’re happy to see you back again!',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(10, 44, 64, 1),
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
 
-                  // Login Method Part
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                    child: Column(
-                      children: <Widget>[
-                        // 3 Login Methods Buttons
-                        Row(
-                          children: [
-                            // Email Button
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: (_selectedIndex == 0)
-                                          ? const Color.fromRGBO(
-                                          64, 194, 210, 1)
-                                          : Colors.grey,
-                                      width: 3,
-                                      style: BorderStyle.solid,
-                                    ),
+                // Login Method Part
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                  child: Column(
+                    children: <Widget>[
+                      // 3 Login Methods Buttons
+                      Row(
+                        children: [
+                          // Email Button
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: (_selectedIndex == 0)
+                                        ? const Color.fromRGBO(
+                                        64, 194, 210, 1)
+                                        : Colors.grey,
+                                    width: 3,
+                                    style: BorderStyle.solid,
                                   ),
                                 ),
-                                child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _selectedIndex = 0;
-                                    });
-                                  },
-                                  child: const Text(
-                                    'Email',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Color.fromRGBO(10, 44, 64, 1),
-                                      fontWeight: FontWeight.bold,
-                                      decoration: TextDecoration.none,
-                                    ),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedIndex = 0;
+                                  });
+                                },
+                                child: const Text(
+                                  'Email',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromRGBO(10, 44, 64, 1),
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.none,
                                   ),
                                 ),
                               ),
                             ),
+                          ),
 
-                            // Username Button
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: (_selectedIndex == 1)
-                                          ? const Color.fromRGBO(
-                                          64, 194, 210, 1)
-                                          : Colors.grey,
-                                      width: 3,
-                                      style: BorderStyle.solid,
-                                    ),
+                          // Username Button
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: (_selectedIndex == 1)
+                                        ? const Color.fromRGBO(
+                                        64, 194, 210, 1)
+                                        : Colors.grey,
+                                    width: 3,
+                                    style: BorderStyle.solid,
                                   ),
                                 ),
-                                child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _selectedIndex = 1;
-                                    });
-                                  },
-                                  child: const Text(
-                                    'Username',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Color.fromRGBO(10, 44, 64, 1),
-                                      fontWeight: FontWeight.bold,
-                                      decoration: TextDecoration.none,
-                                    ),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedIndex = 1;
+                                  });
+                                },
+                                child: const Text(
+                                  'Username',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromRGBO(10, 44, 64, 1),
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.none,
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
+                ),
 
-                  const SizedBox(height: 40),
+                const SizedBox(height: 40),
 
-                  if (_selectedIndex == 0) // Email Login
-                    Column(
-                      children: [
-                        Form(
-                          key: GlobalKey<FormState>(),
-                          child: TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            autovalidateMode:
-                            AutovalidateMode.onUserInteraction,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                _validFieldsEmail['email'] = false;
-                                return 'Please enter your email';
-                              } else if (!RegExp(
-                                  r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                  .hasMatch(value)) {
-                                _validFieldsEmail['email'] = false;
-                                return 'Please enter a valid email address';
-                              }
-                              _validFieldsEmail['email'] = true;
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Color.fromRGBO(64, 194, 210, 1),
-                                ),
-                              ),
-                              prefixIcon: const Icon(Icons.email,
-                                  color: Color.fromRGBO(64, 194, 210, 1)),
-                              hintText: 'Email',
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Color.fromRGBO(64, 194, 210, 1),
-                                ),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                ),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 20),
-                            ),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Color.fromRGBO(10, 44, 64, 1),
-                              fontWeight: FontWeight.w300,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          controller: _emailPasswordController,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          obscureText: true,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              _validFieldsEmail['password'] = false;
-                              return 'Please enter your password';
-                            }
-                            _validFieldsEmail['password'] = true;
-
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            prefixIcon: const Icon(Icons.lock,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Password',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Color.fromRGBO(10, 44, 64, 1),
-                            fontWeight: FontWeight.w300,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: const Text(
-                              'Forgot your password?',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Color.fromRGBO(10, 44, 64, 1),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            backgroundColor:
-                            const Color.fromRGBO(64, 194, 210, 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (_validFieldsEmail['email']! &&
-                                _validFieldsEmail['password']!) {
-                              _loginViaEmail();
-                            }
-                          },
-                          child: const Text('Login'),
-                        ),
-                      ],
-                    )
-                  else if (_selectedIndex == 1) // Username Login
-                    Column(
-                      children: [
-                        TextFormField(
-                          controller: _usernameController,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                if (_selectedIndex == 0) // Email Login
+                  Column(
+                    children: [
+                      Form(
+                        key: GlobalKey<FormState>(),
+                        child: TextFormField(
+                          controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
+                          autovalidateMode:
+                          AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              _validFieldsUsername['username'] = false;
-                              return 'Please enter your username';
-                            } else {
-                              _validFieldsUsername['username'] = true;
-                              return null;
+                              _validFieldsEmail['email'] = false;
+                              return 'Please enter your email';
+                            } else if (!RegExp(
+                                r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(value)) {
+                              _validFieldsEmail['email'] = false;
+                              return 'Please enter a valid email address';
                             }
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            prefixIcon: const Icon(Icons.person,
-                                color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Username',
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Color.fromRGBO(64, 194, 210, 1),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Color.fromRGBO(10, 44, 64, 1),
-                            fontWeight: FontWeight.w300,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          controller: _usernamePasswordController,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          obscureText: true,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              _validFieldsUsername['password'] = false;
-
-                              return 'Please enter your password';
-                            }
-                            _validFieldsUsername['password'] = true;
-
+                            _validFieldsEmail['email'] = true;
                             return null;
                           },
                           decoration: InputDecoration(
@@ -455,9 +254,9 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Color.fromRGBO(64, 194, 210, 1),
                               ),
                             ),
-                            prefixIcon: const Icon(Icons.lock,
+                            prefixIcon: const Icon(Icons.email,
                                 color: Color.fromRGBO(64, 194, 210, 1)),
-                            hintText: 'Password',
+                            hintText: 'Email',
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(
@@ -486,81 +285,283 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: TextDecoration.none,
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: const Text(
-                              'Forgot your password?',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Color.fromRGBO(10, 44, 64, 1),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            backgroundColor:
-                            const Color.fromRGBO(64, 194, 210, 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (_validFieldsUsername['username']! &&
-                                _validFieldsUsername['password']!) {
-                              _loginViaUsername();
-                            }
-                          },
-                          child: const Text('Login'),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _emailPasswordController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            _validFieldsEmail['password'] = false;
+                            return 'Please enter your password';
+                          }
+                          _validFieldsEmail['password'] = true;
 
-
-                  // do not have an account? Sign up
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Don\'t have an account? ',
-                          style: TextStyle(
-                            color: Color.fromRGBO(10, 44, 64, 1),
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacementNamed(
-                                context, '/Register');
-                          },
-                          child: const Text(
-                            'Sign up',
-                            style: TextStyle(
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
                               color: Color.fromRGBO(64, 194, 210, 1),
+                            ),
+                          ),
+                          prefixIcon: const Icon(Icons.lock,
+                              color: Color.fromRGBO(64, 194, 210, 1)),
+                          hintText: 'Password',
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(64, 194, 210, 1),
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                        ),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(10, 44, 64, 1),
+                          fontWeight: FontWeight.w300,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: const Text(
+                            'Forgot your password?',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color.fromRGBO(10, 44, 64, 1),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                          backgroundColor:
+                          const Color.fromRGBO(64, 194, 210, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_validFieldsEmail['email']! &&
+                              _validFieldsEmail['password']!) {
+                            _loginViaEmail();
+                          }
+                        },
+                        child: const Text('Login'),
+                      ),
+                    ],
+                  )
+                else if (_selectedIndex == 1) // Username Login
+                  Column(
+                    children: [
+                      TextFormField(
+                        controller: _usernameController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            _validFieldsUsername['username'] = false;
+                            return 'Please enter your username';
+                          } else {
+                            _validFieldsUsername['username'] = true;
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(64, 194, 210, 1),
+                            ),
+                          ),
+                          prefixIcon: const Icon(Icons.person,
+                              color: Color.fromRGBO(64, 194, 210, 1)),
+                          hintText: 'Username',
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(64, 194, 210, 1),
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                        ),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(10, 44, 64, 1),
+                          fontWeight: FontWeight.w300,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _usernamePasswordController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            _validFieldsUsername['password'] = false;
+
+                            return 'Please enter your password';
+                          }
+                          _validFieldsUsername['password'] = true;
+
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(64, 194, 210, 1),
+                            ),
+                          ),
+                          prefixIcon: const Icon(Icons.lock,
+                              color: Color.fromRGBO(64, 194, 210, 1)),
+                          hintText: 'Password',
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(64, 194, 210, 1),
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                        ),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(10, 44, 64, 1),
+                          fontWeight: FontWeight.w300,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: const Text(
+                            'Forgot your password?',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color.fromRGBO(10, 44, 64, 1),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                          backgroundColor:
+                          const Color.fromRGBO(64, 194, 210, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_validFieldsUsername['username']! &&
+                              _validFieldsUsername['password']!) {
+                            _loginViaUsername();
+                          }
+                        },
+                        child: const Text('Login'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+
+
+                // do not have an account? Sign up
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Don\'t have an account? ',
+                        style: TextStyle(
+                          color: Color.fromRGBO(10, 44, 64, 1),
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacementNamed(
+                              context, '/Register');
+                        },
+                        child: const Text(
+                          'Sign up',
+                          style: TextStyle(
+                            color: Color.fromRGBO(64, 194, 210, 1),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),

@@ -60,73 +60,91 @@ class _ChatPageState extends State<ChatPage> {
 
   // call messagesCubit.getMessages every 1 second
 
-
   final _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromRGBO(10, 44, 64, 1), // Dark blue
-                Color.fromRGBO(64, 194, 210, 1), // Light blue
-              ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.fromRGBO(10, 44, 64, 1), // Dark blue
+                  Color.fromRGBO(64, 194, 210, 1), // Light blue
+                ],
+              ),
             ),
           ),
-        ),
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: themeLightGrey,
-              radius: 22,
-              child: Image.network('$_baseImageUrl${widget.friend.avatar}',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                return Icon(
-                  Icons.person,
-                  color: themeDarkBlue,
-                  size: 30,
-                );
-              }, loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: themeBlue,
-                    backgroundColor: themePink,
+          title: Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  // Show the image preview
+                  showImagePreview(
+                      context, '$_baseImageUrl${widget.friend.avatar}');
+                },
+                child: CircleAvatar(
+                  backgroundColor: themeLightGrey,
+                  radius: 22,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.network(
+                      '$_baseImageUrl${widget.friend.avatar}',
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          Icons.person,
+                          color: themeDarkBlue,
+                          size: 30,
+                        );
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: themeBlue,
+                            backgroundColor: themePink,
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                );
-              }),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              widget.friend.name,
-              style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                widget.friend.name,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              friendCubit.getFriends();
+              Navigator.pop(context);
+            },
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.more_vert, color: Colors.white),
+              onPressed: () {
+                // TODO: Implement action for three-dot menu
+              },
             ),
           ],
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            friendCubit.getFriends();
-            Navigator.pop(context);
-          },
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {
-              // TODO: Implement action for three-dot menu
-            },
-          ),
-        ],
+        body: _buildFriendshipStatus(),
       ),
-      body: _buildFriendshipStatus(),
     );
   }
 
@@ -135,7 +153,8 @@ class _ChatPageState extends State<ChatPage> {
       bloc: friendCubit,
       builder: (context, state) {
         if (state is FriendShipLoading) {
-          return  Center(child: CircularProgressIndicator(
+          return Center(
+              child: CircularProgressIndicator(
             color: themeBlue,
             backgroundColor: themePink,
           ));
@@ -150,11 +169,20 @@ class _ChatPageState extends State<ChatPage> {
                   Icon(
                     Icons.person_add,
                     size: 60,
-                    color: themeDarkBlue.withOpacity(0.7),
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .color!
+                        .withOpacity(0.7),
                   ),
                   Text(
                     'Friend request has been sent',
-                    style: TextStyle(color: themeDarkBlue.withOpacity(0.7)),
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .color!
+                            .withOpacity(0.7)),
                   ),
                 ],
               ),
@@ -262,6 +290,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   List<MessageModel> messages = [];
+
   BlocBuilder<MessagesCubit, MessagesState> _buildMessages() {
     return BlocBuilder<MessagesCubit, MessagesState>(
       bloc: messagesCubit,
@@ -269,118 +298,52 @@ class _ChatPageState extends State<ChatPage> {
         print(state);
         if (state is MessagesLoadedList) {
           messages = state.messages;
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: state.messages.length,
-                  reverse: true,
-                  scrollDirection: Axis.vertical,
-                  semanticChildCount: state.messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = state.messages[index];
-                    if(msg.sender_id == user.id) {
-                      return Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(150, 10, 0, 10),
-                          alignment: Alignment.centerRight,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                            color: themeDarkBlue.withOpacity(0.8),
-                          ),
-                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                          child: Text(
-                            msg.message!,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 10, 150, 10),
-                          alignment: Alignment.centerLeft,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                            color: themeLightGrey.withOpacity(0.8),
-                          ),
-                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                          child: Text(
-                            msg.message!,
-                            style: const TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
-              _buildMessageInputField(),
-            ],
-          );
-        } else {
-         return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: messages.length,
-                  reverse: true,
-                  scrollDirection: Axis.vertical,
-                  semanticChildCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = messages[index];
-                    if(msg.sender_id == user.id) {
-                      return Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(150, 10, 0, 10),
-                          alignment: Alignment.centerRight,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                            color: themeDarkBlue.withOpacity(0.8),
-                          ),
-                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                          child: Text(
-                            msg.message!,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(0, 10, 150, 10),
-                          alignment: Alignment.centerLeft,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                            color: themeLightGrey.withOpacity(0.8),
-                          ),
-                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                          child: Text(
-                            msg.message!,
-                            style: const TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
-              _buildMessageInputField(),
-            ],
-          );
         }
+
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: messages.length,
+                reverse: true,
+                scrollDirection: Axis.vertical,
+                semanticChildCount: messages.length,
+                itemBuilder: (context, index) {
+                  final msg = messages[index];
+                  final isCurrentUser = msg.sender_id == user.id;
+
+                  return Align(
+                    alignment: isCurrentUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: isCurrentUser ? 16 : 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: isCurrentUser
+                            ? themeDarkBlue.withOpacity(0.8)
+                            : themeLightGrey.withOpacity(0.8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      constraints: const BoxConstraints(
+                        minWidth: 50,
+                        maxWidth: 200, // Adjust the maximum width as needed
+                      ),
+                      child: Text(
+                        msg.message!,
+                        style: TextStyle(
+                            color: isCurrentUser ? Colors.white : Colors.black),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            _buildMessageInputField(),
+          ],
+        );
       },
     );
   }
@@ -418,10 +381,11 @@ class _ChatPageState extends State<ChatPage> {
                 if (_messageController.text.length > 254) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Message cannot be more than 255 characters'),
+                      content:
+                          Text('Message cannot be more than 255 characters'),
                     ),
                   );
-                }else{
+                } else {
                   messagesCubit.sendMessage(
                     friend_id: widget.friend.id!,
                     message: _messageController.text,
@@ -434,6 +398,37 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void showImagePreview(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(
+                  Icons.person,
+                  color: themeDarkBlue,
+                  size: 200, // Adjust the size as needed
+                );
+              },
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return CircularProgressIndicator(
+                  color: themeBlue,
+                  backgroundColor: themePink,
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

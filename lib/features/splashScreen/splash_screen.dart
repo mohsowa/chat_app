@@ -60,13 +60,15 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Container(
+
       padding: const EdgeInsets.all(20),
-      color: Colors.white,
+      color: Theme.of(context).primaryColor,
+
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.chat, size: 100, color: themeBlue,),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           CircularProgressIndicator(
             valueColor: _controller.drive(ColorTween(
               begin: themeBlue,

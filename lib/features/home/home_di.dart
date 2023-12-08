@@ -17,9 +17,12 @@ import 'package:http/http.dart' as http;
 
 final sl = GetIt.instance;
 
+bool isHomeInitialized = false; // Add this flag
+
 Future<void> homeInit() async {
-
-
+  if (isHomeInitialized) {
+    return; // If already initialized, exit early
+  }
 
   print('HomeInit');
 
@@ -65,6 +68,5 @@ Future<void> homeInit() async {
         sharedPreferences: sl(),
       )
   );
-
+  isHomeInitialized = true; // Set the flag to true after initialization
 }
-
